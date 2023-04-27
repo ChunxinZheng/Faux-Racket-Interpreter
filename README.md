@@ -37,16 +37,16 @@ _expr_ =  num  <br>
 
 ## Basic Features
 
-(fun (var) _expr_) &emsp; &emsp; &emsp; &emsp; Creates a [```lambda```][8] function with parameter [var] and body [expr] <br>
-(_expr1_ _expr2_) &emsp; &emsp; &emsp; &emsp; &emsp; &nbsp; Takes [_expr2_] as the function argument, apply it to [_expr1_] (a ```fun```) <br>
-(ifzero _expr1_ _expr_ _expr_) &emsp; &emsp; &emsp; A special case for an [```if```][9] in Racket that checks if [_expr1_] is zero <br>
-(with ((var _expr1_)) _expr2_) &emsp; &emsp; &emsp; Resembles [```let```][1] in Racket <br>
-(rec ((var _expr_)) _expr_) &emsp; &emsp; &emsp; Remembles [```letrec```][2] in Racket <br>
-(seq _expr_ _expr_) &emsp; &emsp; &emsp; Remembles [```begin```][3] in Racket <br>
-(set var _expr_) &emsp; &emsp; &emsp; Remembles [```set!```][4] in Racket <br>
-(box _expr_) &emsp; &emsp; &emsp; Remembles [```box```][5] in Racket <br>
-(unbox _expr_) &emsp; &emsp; &emsp; Remembles [```unbox```][6] in Racket <br>
-(setbox _expr_ _expr_) &emsp; &emsp; &emsp; Remembles [```set-box!```][7] in Racket  <br>
+(fun (var) _expr_) &emsp; &emsp; &emsp; &emsp; &emsp; &emsp; &emsp; &emsp; Creates a [```lambda```][8] function with parameter [var] and body [expr] <br>
+(_expr1_ _expr2_) &emsp; &emsp; &emsp; &emsp; &emsp; &emsp; &emsp; &emsp; &emsp;  &nbsp; Takes [_expr2_] as the function argument, apply it to [_expr1_] (a ```fun```) <br>
+(ifzero _expr1_ _expr_ _expr_) &emsp; &emsp; &emsp; &emsp; &emsp; &emsp; A special case for an [```if```][9] in Racket that checks if [_expr1_] is zero <br>
+(with ((var _expr1_)) _expr2_) &emsp; &emsp; &emsp; &emsp; &emsp; &emsp; Resembles [```let```][1] in Racket <br>
+(rec ((var _expr_)) _expr_) &emsp; &emsp; &emsp; &emsp; &emsp; &emsp; Remembles [```letrec```][2] in Racket <br>
+(seq _expr_ _expr_) &emsp; &emsp; &emsp; &emsp; &emsp; &emsp;  Remembles [```begin```][3] in Racket <br>
+(set var _expr_) &emsp; &emsp; &emsp; &emsp; &emsp; &emsp;  Remembles [```set!```][4] in Racket <br>
+(box _expr_) &emsp; &emsp; &emsp; &emsp; &emsp; &emsp;  Remembles [```box```][5] in Racket <br>
+(unbox _expr_) &emsp; &emsp; &emsp; &emsp; &emsp; &emsp;  Remembles [```unbox```][6] in Racket <br>
+(setbox _expr_ _expr_) &emsp; &emsp; &emsp; &emsp; &emsp; &emsp;  Remembles [```set-box!```][7] in Racket  <br>
 
 [1]: https://docs.racket-lang.org/reference/let.html#%28form._%28%28lib._racket%2Fprivate%2Fletstx-scheme..rkt%29._let%29%29
 [2]: https://docs.racket-lang.org/reference/let.html#%28form._%28%28lib._racket%2Fprivate%2Fletstx-scheme..rkt%29._letrec%29%29
