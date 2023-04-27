@@ -66,6 +66,6 @@ CS146 Assignment [Q5][10]
 CS146 Assignment [Q6][11]
 CS146 Assignment [Q7][12]
 
-[10]: 
+[10]: https://github.com/ChunxinZheng/Faux-Racket-Interpreter/issues/1#issue-1687570041
 [11]: 
 [12]: 
