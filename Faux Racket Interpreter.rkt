@@ -5,7 +5,7 @@
 ;; ---------------- Basic introduction ----------------
 
 ;; The code is modified based on the University of Waterloo CS146
-;; Assignment Q5, Q6, and Q7. The starter code was provided by CS146.
+;; Assignment Q5, Q6, and Q7. The starter code was provided by the CS146 instructor team.
 ;; This is an interpreter for Faux Racket (a pseudocode based on Racket).
 ;; More detailed information, including the grammar of Faux Racket,
 ;; is stated in the README file
@@ -23,6 +23,8 @@
 (struct bin (op fst snd) #:transparent) ; op is a symbol; fst, snd are ASTs.
 (struct fun (param body) #:transparent) ; param is a symbol; body is an AST.
 (struct app (fn arg) #:transparent) ; fn and arg are ASTs.
+(struct rec (nm nmd body) #:transparent)
+(struct ifzero (t tb fb) #:transparent)
 (struct seq (fst snd) #:transparent)
 (struct set (var newval) #:transparent)
 (struct newbox (exp) #:transparent)
@@ -58,6 +60,8 @@
     [`(- ,x ,y) (bin '- (parse x) (parse y))]
     [`(/ ,x ,y) (bin '/ (parse x) (parse y))]
     [`(fun (,x) ,bdy) (fun x (parse bdy))]
+    [`(rec ((,nm ,nmd)) ,body) (rec nm (parse nmd) (parse body))]
+    [`(ifzero ,t ,tb ,fb) (ifzero (parse t) (parse tb) (parse fb))]
     [`(set ,x ,y) (set x (parse y))]
     [`(seq ,x ,y) (seq (parse x) (parse y))]
     [`(box ,x) (newbox (parse x))]
@@ -99,6 +103,12 @@
      (match (interp x env store)
        [(result _ nstore1)
         (interp y env nstore1)])]
+    [(ifzero t tb fb)
+     (match (interp t env store)
+       [(result ans nstore) 
+        (if (zero? ans) (interp tb env nstore) (interp fb env nstore))])]
+    [(rec nm nmd body)
+     (interp body (cons (sub nm (length store)) env) (cons (list (length store) nmd) store))]
     [(newbox x)
      (match (interp x env store)
      [(result v nstore)
@@ -114,9 +124,10 @@
        (match (interp y env store)
        [(result v nstore)
      (result (void) (changeval addr v nstore))])])]
-    [x (if (number? x)
-           (result x store)
-           (result (lookup1 (lookup x env) store) store))]))
+    [x (cond [(number? x) (result x store)]
+             [else (define res (lookup1 (lookup x env) store))
+                   (if (closure? res) res
+                       (interp res env store))])]))
 
 
 
