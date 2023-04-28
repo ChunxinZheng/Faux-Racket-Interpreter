@@ -10,12 +10,64 @@
 ;; More detailed information, including the grammar of Faux Racket,
 ;; is stated in the README file
 
-;; --- Usage Examples ---
+;; ------------------------ Usage Examples ------------------------
 
-(check-expect (interp (parse '(with ((x 3)) (* x x))) empty empty) (result 9 '((0 3))))
+;; 1. Basic arithmetic expression
+(check-expect (interp (parse '(* (+ 4 2) (/ (- 10 -2) 3))) empty empty)
+              (result 24 '()))
+
+;; 2. The value of a lamba function is a closure
+(check-expect (interp (parse '(fun (x) (+ x 1))) empty empty)
+              (result (closure 'x (bin '+ 'x 1) '()) '()))
+
+;; 3. Application of a function
+(check-expect (interp (parse '((fun (x) (/ x 2)) 8)) empty empty)
+              (result 4 '((0 8))))
+
+;; 4. Usage of [with] and [rec] (resembles [let] and [letrec] in Racket)
+;; The usage of [ifzero] is also presented
+
+; Correct usage of [with]
+(check-expect (interp (parse '(with ((x 3)) (* x x))) empty empty)
+              (result 9 '((0 3))))
+; [with] does not support recursive definition
+(check-error (interp (parse '(with
+                              ((fact (fun (x)
+                                          (ifzero x 1 (* x (fact (- x 1)))))))
+                                        (fact 5))) empty empty))
+; [rec] supports recursion
+(check-expect (result-val (interp (parse
+                                   '(rec ((fact
+                                          (fun (x) (ifzero x 1 (* x (fact (- x 1)))))))
+                                        (fact 5))) empty empty))
+              120)
+(check-expect (result-val (interp (parse
+                                   '(rec ((power
+                                          (fun (x) (ifzero x 1 (* 2 (power (- x 1)))))))
+                                        (power 10))) empty empty))
+              1024)
+
+;; 5. Usage of [set] and [seq]
 (check-expect (interp (parse '(with ((y 5))
                                     (+ (with ((x 3)) (seq (set x 6) (+ y x))) y))) empty empty)
               (result 16 '((1 6) (1 3) (0 5))))
+
+; [set] does not cause aliasing
+(check-expect (interp (parse '(with ((y 5))
+                                    (+ (with ((x y)) (seq (set x 0) (+ y x))) y))) empty empty)
+              (result 10 '((1 0) (1 5) (0 5))))
+
+;; 6. Usage of [box], [unbox], [setbox]
+(check-expect (interp (parse '((fun (x) (seq (setbox x 19) (unbox x))) (box 0))) empty empty)
+              (result 19 '((1 0) (0 19))))
+
+; boxes may cause aliasing
+(check-expect (result-val (interp (parse '(with ((x (box 3)))
+                                    (with ((y x))
+                                          (seq (setbox y 10)
+                                               (+ (unbox x) (unbox y)))))) empty empty))
+              20)
+
 
 
 ;; --- Basic Structures ---
@@ -126,7 +178,7 @@
      (result (void) (changeval addr v nstore))])])]
     [x (cond [(number? x) (result x store)]
              [else (define res (lookup1 (lookup x env) store))
-                   (if (closure? res) res
+                   (if (closure? res) (result res store)
                        (interp res env store))])]))
 
 
@@ -168,5 +220,5 @@
     [else (cons (first store) (changeval nl v (rest store)))]))
 
 
-
-;(test)
+;; Uncomment next line to test the program
+; (test)
