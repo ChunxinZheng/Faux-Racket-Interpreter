@@ -2,7 +2,7 @@
 
 An interpreter for Faux Racket, written in Racket.
 
-The code was modified based on the Univeristy of Waterloo CS146 Assignments. The starter code (presented in the file [AssignmentStarterCode.rkt]) was provided by CS 146 instructor team.
+The code was modified based on the Univeristy of Waterloo CS146 Assignments. The [starter code](AssignmentStarterCode.rkt) was provided by CS 146 instructor team.
 
 The abstract syntaxe tree, guildlines for using the program, and referenced assignments links are provided below.
 
