@@ -1,4 +1,4 @@
-# Faux-Racket-Interpreter
+# Pseudo-Interpreter (Faux Racket)
 
 An interpreter for Faux Racket, written in Racket.
 
