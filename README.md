@@ -10,6 +10,7 @@ The abstract syntaxe tree, guildlines for using the program, and referenced assi
 ## Table of Contents
 - [Faux Racket Grammar](#faux-racket-grammar)
 - [Basic Features](#basic-features)
+- [Environment and Store](#environment-and-store)
 - [Assignment Links](#assignment-links)
 
 ## Faux Racket Grammar
@@ -57,6 +58,21 @@ _expr_ =  num  <br>
 [7]: https://docs.racket-lang.org/reference/boxes.html#%28def._%28%28quote._~23~25kernel%29._box%29%29
 [8]: https://docs.racket-lang.org/reference/boxes.html#%28def._%28%28quote._~23~25kernel%29._unbox%29%29
 [9]: https://docs.racket-lang.org/reference/boxes.html#%28def._%28%28quote._~23~25kernel%29._set-box%21%29%29
+
+
+## Environment and Store
+This interpreter uses two layers of mapping, with the environment mapping a variable name to its memory location in the store, and the store mapping the address to its values). This model is a good reflection of how actual Racket is implemented by lower level languages. We will discuss below about the logistics of this model. <br>
+### Env
+If we have narrowed the range of the interpreter a bit more (although the subset of Racket chosen is already small enough), the store would've been unnecessary. Making the environment mapping a variable name directly to its value can perfectly handle everything except for possible aliasing brought by the boxes. Referencing a variable can be easily implemented by a lookup function. On another note, ```set``` can simply change the mapping between the variable name and the corresponding value. Apparently, there's no need for another layer of mapping at this stage. <br>
+### Store
+Consider the following:
+```racket 
+(with ((x (box 0))
+      (with ((y x))
+            (seq (setbox x 5)
+                 (unbox y)))))
+```
+The code above should produce 5 when we unbox y, note there's aliasing between x and y here. This is not achievable with one layer of mapping since with that there's no way to link change in the boxed content x to change in the boxed content of y. We will thus modify environment to mapping variables to their locations, this environment is not modified, and does not need to be returned (we do not need to worry about local binding when returning). Furthermore, we will have a store mapping locations to values, values are updated while locations are not. Aliasing can thus be achieved by mapping two variables to the same location. 
 
 
 
